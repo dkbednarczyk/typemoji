@@ -1,0 +1,25 @@
+# Popularity baseline, most used first. Whitespace separated.
+# Hand-curated, loosely following Unicode's published emoji frequency ranking.
+# Only breaks ties between emoji with no personal usage yet.
+😂 ❤️ 🤣 👍 😭 🙏 😘 🥰 😍 😊
+🎉 😁 💕 🥺 😅 🔥 ☺️ 🤦 ♥️ 🤷
+🙄 😆 🤗 😉 🎂 🤔 👏 🙂 😳 🥳
+😎 👌 💜 😔 💪 ✨ 💖 👀 😋 😏
+😢 👉 💗 😩 💯 🌹 💞 🎈 💙 😃
+😡 💐 😜 🙈 🤞 😄 🤤 🙌 🤪 ❣️
+😀 💋 💀 👇 💔 😌 💓 🤩 🙃 😬
+😱 😴 🤭 😐 🌞 😒 😇 🌸 😈 🎶
+✌️ 🎊 🥵 😞 💚 ☀️ 🖤 💰 😚 👑
+🎁 💥 🙋 ☹️ 😑 🥴 👈 💩 ✅ 👋
+🤮 😤 🤢 🌟 ❗ 😥 🌈 💛 😝 😫
+😲 🖕 ‼️ 🔴 🌻 🤯 💃 👊 🤬 🏃
+😕 👁️ ⚡ ☕ 🍀 💦 ⭐ 🦋 🤨 🌺
+😹 🤘 🌷 💝 💤 🤝 🐰 😓 💘 🍻
+😟 😣 🧐 😠 🤠 😻 🌙 😛 🤙 🙊
+🧡 🤡 🤫 🌼 🥂 😷 🤓 🥶 😶 😖
+🎵 🚶 😙 🍆 🤑 💅 😗 🐶 🍓 👅
+👄 🌿 🚨 📣 🤟 🍑 🍃 😮 💎 📢
+🌱 🙁 🍷 😪 🌚 🏆 🍒 💉 ➡️ 🛑
+🚀 👻 🫡 🫠 🫶 🤌 🥹 🫣 🗿 🤝
+❌ ⚠️ ❓ 🤖 🐛 🚧 📌 📝 💡 🔒
+🎯 🧠 👎 🤍 🩷 😨 😰 🥲 😵 🤐

@@ -1,0 +1,20 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "typemoji-tools",
+      "dependencies": {
+        "discord-emoji": "^2.5.3",
+        "emojibase-data": "^17.0.0",
+      },
+    },
+  },
+  "packages": {
+    "discord-emoji": ["discord-emoji@2.5.3", "", {}, "sha512-yfH/+clSLuZjHyGQC7ozNenof9ZHNUB19d+qQHw+v3tCW2147OgimJVUpnYhZLE6hLWAi29+7pnA3flj0a5DVQ=="],
+
+    "emojibase": ["emojibase@17.0.0", "", {}, "sha512-bXdpf4HPY3p41zK5swVKZdC/VynsMZ4LoLxdYDE+GucqkFwzcM1GVc4ODfYAlwoKaf2U2oNNUoOO78N96ovpBA=="],
+
+    "emojibase-data": ["emojibase-data@17.0.0", "", { "peerDependencies": { "emojibase": "*" } }, "sha512-Yvgb5AWoHViHV/gq1qr5ZAarcBip+B27/ZLRsUJkbgAEaLlZ/fof9g882LTpmEpyhBNEC0m2SEmItljHsTygjA=="],
+  }
+}

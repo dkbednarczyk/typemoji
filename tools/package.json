@@ -1,0 +1,12 @@
+{
+  "name": "typemoji-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "bun run generate-emoji.ts"
+  },
+  "dependencies": {
+    "discord-emoji": "^2.5.3",
+    "emojibase-data": "^17.0.0"
+  }
+}
