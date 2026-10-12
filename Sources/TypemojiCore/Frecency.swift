@@ -37,15 +37,19 @@ public struct Frecency: Codable, Equatable, Sendable {
 }
 
 extension EmojiDatabase {
-  /// The emoji a partial code resolves to. An exact name wins outright, then
-  /// personal usage, then the popularity baseline.
+  /// Names this short (`a`, `ok`, `no`) are also the prefixes typed most, so they are
+  /// ranked like any other match. Winning outright would keep usage from ever teaching them.
+  public static let shortNameLength = 2
+
+  /// The emoji a partial code resolves to. An exact name longer than
+  /// `shortNameLength` wins outright, then personal usage, then the popularity baseline.
   public func best(for code: String, frecency: Frecency, now: Date) -> Emoji? {
     ranked(for: code, frecency: frecency, now: now, limit: 1).first
   }
 
   /// Up to `limit` emoji for a partial code, most likely first.
   public func ranked(for code: String, frecency: Frecency, now: Date, limit: Int) -> [Emoji] {
-    let exact = exact(code)
+    let exact = code.count > Self.shortNameLength ? exact(code) : nil
     let candidates = matches(prefix: code).filter { $0 != exact }.enumerated().map { offset, emoji in
       (
         emoji: emoji, score: frecency.score(for: emoji.emoji, now: now), rank: emoji.rank ?? .max,

@@ -77,8 +77,8 @@ for (const [source, names] of Object.entries(sources)) {
   for (const [raw, index] of names) {
     const name = normalize(raw);
     if (name === undefined) continue;
-    // Bare country codes (`so`, `it`, `no`) are exact names, so they would win
-    // Tab over every longer name. Flags stay reachable as `flag_so`.
+    // Bare country codes (`so`, `it`, `no`) are ordinary words and prefixes, and
+    // would convert on a closing colon. Flags stay reachable as `flag_so`.
     if (name.length <= 2 && flags.has(index)) continue;
     const existing = owner.get(name);
     if (existing === undefined) {

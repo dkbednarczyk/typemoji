@@ -2,13 +2,26 @@ import AppKit
 import ApplicationServices
 
 /// Finds the text caret of the focused app through the Accessibility API.
-@MainActor
 enum CaretLocator {
   /// Keeps an unresponsive app from stalling the popup.
   private static let timeout: Float = 0.15
 
   /// The caret in AppKit screen coordinates, or nil when the app does not expose it.
-  static func caretRect() -> CGRect? {
+  @MainActor
+  static func caretRect() async -> CGRect? {
+    // The focused app can take a while to answer, and the main thread also runs
+    // the event tap, where waiting would hold up every keystroke.
+    guard
+      let rect = await Task.detached(priority: .userInitiated, operation: { accessibilityCaretRect() }).value,
+      let primary = NSScreen.screens.first
+    else { return nil }
+
+    // Accessibility uses a top-left origin on the primary screen; AppKit uses bottom-left.
+    return CGRect(x: rect.minX, y: primary.frame.height - rect.maxY, width: rect.width, height: rect.height)
+  }
+
+  /// The caret in Accessibility screen coordinates.
+  private static func accessibilityCaretRect() -> CGRect? {
     let system = AXUIElementCreateSystemWide()
     AXUIElementSetMessagingTimeout(system, timeout)
 
@@ -37,10 +50,7 @@ enum CaretLocator {
     {
       rect = CGRect(x: previous.maxX, y: previous.minY, width: 0, height: previous.height)
     }
-    guard let rect, let primary = NSScreen.screens.first else { return nil }
-
-    // Accessibility uses a top-left origin on the primary screen; AppKit uses bottom-left.
-    return CGRect(x: rect.minX, y: primary.frame.height - rect.maxY, width: rect.width, height: rect.height)
+    return rect
   }
 
   private static func bounds(of range: CFRange, in element: AXUIElement) -> CGRect? {

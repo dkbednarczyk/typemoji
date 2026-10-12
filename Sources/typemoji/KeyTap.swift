@@ -17,7 +17,7 @@ final class KeyTap {
 
   fileprivate static var current: KeyTap?
 
-  private let handler: (Engine.Input) -> Engine.Output
+  fileprivate let handler: (Engine.Input) -> Engine.Output
   private var port: CFMachPort?
 
   var isRunning: Bool { port != nil }
@@ -161,6 +161,8 @@ private func tapCallback(
   let swallow = MainActor.assumeIsolated {
     guard let tap = KeyTap.current else { return false }
     if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
+      // Keys typed while the tap was off were missed, so the armed code can no longer be trusted.
+      _ = tap.handler(.reset)
       tap.applyEnabled()
       return false
     }

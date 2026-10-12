@@ -11,6 +11,10 @@ private let database = EmojiDatabase(entries: [
   Emoji(emoji: "🚒", names: ["fire_engine"]),
   Emoji(emoji: "👋", names: ["wave"], tones: ["👋🏻", "👋🏼", "👋🏽", "👋🏾", "👋🏿"]),
   Emoji(emoji: "🧑‍🦰", names: ["person_sob_test"]),
+  Emoji(emoji: "🅾️", names: ["o2"]),
+  Emoji(emoji: "⭕", names: ["o"]),
+  Emoji(emoji: "👌", names: ["ok_hand"], rank: 2),
+  Emoji(emoji: "🆗", names: ["ok"]),
 ])
 
 private let start = Date(timeIntervalSince1970: 1_000_000)
@@ -190,6 +194,16 @@ private struct Typist {
     #expect(typist.result(" :fire\t") == .replace(backspaces: 5, text: "🔥"))
   }
 
+  @Test func shortExactNamesAreRankedLikeAnyOtherMatch() {
+    var typist = Typist()
+    #expect(typist.result(":o\t") == .replace(backspaces: 2, text: "👌"))
+    #expect(typist.result(" :ok\t") == .replace(backspaces: 3, text: "👌"))
+    // The closing colon still converts them, and that usage is learned.
+    typist = Typist()
+    #expect(typist.result(":o:") == .replace(backspaces: 2, text: "⭕"))
+    #expect(typist.result(" :o\t") == .replace(backspaces: 2, text: "⭕"))
+  }
+
   @Test func scoresDecayWithA30DayHalfLife() {
     var frecency = Frecency()
     frecency.add(1, to: "😭", now: start)
@@ -326,5 +340,6 @@ private struct Typist {
     let now = Date()
     #expect(database.best(for: "so", frecency: Frecency(), now: now)?.emoji == "😭")
     #expect(database.best(for: "fire", frecency: Frecency(), now: now)?.emoji == "🔥")
+    #expect(database.best(for: "ok", frecency: Frecency(), now: now)?.emoji == "👌")
   }
 }

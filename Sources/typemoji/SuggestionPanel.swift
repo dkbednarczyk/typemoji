@@ -14,6 +14,8 @@ final class SuggestionPanel {
   /// Where the caret was when the popup appeared. Kept while it stays open so it does not jump around.
   private var anchor: CGRect?
   private var isShown = false
+  /// Counts appearances, so a caret lookup that outlives its popup is ignored.
+  private var appearance = 0
 
   init() {
     panel = NSPanel(
@@ -70,11 +72,12 @@ final class SuggestionPanel {
       return
     }
     isShown = true
-    // Asking the focused app for its caret can block briefly, and this runs
-    // inside the event tap, so do it after the keystroke has been let through.
+    appearance += 1
+    let appearance = appearance
     Task { @MainActor in
-      guard self.isShown else { return }
-      self.anchor = CaretLocator.caretRect()
+      let caret = await CaretLocator.caretRect()
+      guard self.isShown, self.appearance == appearance else { return }
+      self.anchor = caret
       self.place()
       self.panel.orderFrontRegardless()
     }

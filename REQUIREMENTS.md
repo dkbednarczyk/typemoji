@@ -76,6 +76,7 @@ A macOS menu bar app that expands Discord-style emoji codes (`:sob:`, `:fire:`) 
   - An undo subtracts 1.
 - A built-in popularity baseline ships with the app, so `:so` gives 😭 on day one. The baseline only breaks ties and ranks emoji that have no usage yet; personal usage always overrides it.
 - An exact name match always beats frecency: `:fire` + Tab gives 🔥 even if `fire_engine` has a higher score.
+  - Names of one or two characters (`:a:`, `:ok:`, `:no:`) are the exception. They are ranked like any other match, so that `:o` + Tab can still learn. Their closing colon converts as usual.
 - Both Tab completions and closing-colon conversions count as a use.
 
 ## Skin tone

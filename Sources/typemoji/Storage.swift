@@ -32,14 +32,24 @@ enum Storage {
     .urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
     .appendingPathComponent("typemoji", isDirectory: true)
 
+  /// Writes happen here so that a slow disk never holds up the event tap.
+  private static let queue = DispatchQueue(label: "xyz.bednarczyk.typemoji.storage", qos: .utility)
+
   static func load<Value: Decodable>(_ type: Value.Type, from name: String) -> Value? {
-    guard let data = try? Data(contentsOf: directory.appendingPathComponent(name)) else { return nil }
+    let url = directory.appendingPathComponent(name)
+    guard let data = try? Data(contentsOf: url) else { return nil }
     let decoder = JSONDecoder()
     decoder.dateDecodingStrategy = .iso8601
     do {
       return try decoder.decode(type, from: data)
     } catch {
-      NSLog("typemoji: ignoring unreadable %@: %@", name, String(describing: error))
+      // The defaults are saved over this file next, so keep the unreadable one to be fixed by hand.
+      let backup = url.appendingPathExtension("bak")
+      try? FileManager.default.removeItem(at: backup)
+      try? FileManager.default.moveItem(at: url, to: backup)
+      NSLog(
+        "typemoji: ignoring unreadable %@, kept as %@: %@", name, backup.lastPathComponent,
+        String(describing: error))
       return nil
     }
   }
@@ -49,10 +59,22 @@ enum Storage {
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
     encoder.dateEncodingStrategy = .iso8601
     do {
-      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-      try encoder.encode(value).write(to: directory.appendingPathComponent(name), options: .atomic)
+      let data = try encoder.encode(value)
+      queue.async {
+        do {
+          try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+          try data.write(to: directory.appendingPathComponent(name), options: .atomic)
+        } catch {
+          NSLog("typemoji: could not save %@: %@", name, String(describing: error))
+        }
+      }
     } catch {
       NSLog("typemoji: could not save %@: %@", name, String(describing: error))
     }
+  }
+
+  /// Waits for pending writes to reach the disk.
+  static func flush() {
+    queue.sync {}
   }
 }

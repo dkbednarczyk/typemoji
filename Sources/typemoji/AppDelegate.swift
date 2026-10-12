@@ -57,6 +57,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     stateChanged()
   }
 
+  func applicationWillTerminate(_ notification: Notification) {
+    Storage.flush()
+  }
+
   private func loadDatabase() -> EmojiDatabase {
     // The bundle script copies emoji.json into the app; the fallback keeps `swift run` working.
     let url =
@@ -123,8 +127,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     let enabled = item("Enabled", #selector(toggleEnabled), checked: settings.enabled)
-    enabled.keyEquivalent = "e"
-    enabled.keyEquivalentModifierMask = [.control, .option, .command]
+    if Hotkey.isRegistered {
+      enabled.keyEquivalent = Hotkey.character
+      enabled.keyEquivalentModifierMask = [.control, .option, .command]
+    }
     menu.addItem(enabled)
 
     if let bundleID = frontmost?.bundleIdentifier, bundleID != Bundle.main.bundleIdentifier {
